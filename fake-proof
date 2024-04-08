@@ -1,4 +1,5 @@
 iv_russ
 a implies (a implies a)
 (a implies a implies a) implies ((a implies a) implies (a implies a))
+(a implies a) implies (a implies a)
 a implies a implies a implies a
