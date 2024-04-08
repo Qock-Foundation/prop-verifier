@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-# you can try feeding some axioms to this program, it will recognize whether it is an axiom or not and axiom
-# for example, try saying "a implies b implies a" (or "a implies (b implies a)"), it should say it is an axiom; you can try different variables or even subexpressions, it should also recognize successfully
-# "a or b" should not be an axiom
-
 import sys, re
 from cPyparsing import nums, alphas, Word, oneOf, opAssoc, infixNotation
 
@@ -82,7 +78,7 @@ def follows_by_mp(proposition_parsed, theorems):
   for a_implies_b in theorems:
     if len(a_implies_b) == 3 and a_implies_b[1] in implications_s:
       a, _, b = a_implies_b
-      if str(a) in map(str, theorems):
+      if str(a) in map(str, theorems) and str(b) == str(proposition_parsed):
         return True
   return False
 
