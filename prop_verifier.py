@@ -108,7 +108,7 @@ for i, s in enumerate(sys.stdin):
   sys.stdout.flush()
 print('PROOF IS CORRECT! :)')
 
-with open('/home/elexunix/5701/accepted-proofs.html', 'a') as logs:
+with open('accepted-proofs.html', 'a') as logs:
   logs.write(f'{author} proved that {s}! <br>\n')
   logs.flush()
 quit(0)
