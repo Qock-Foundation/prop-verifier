@@ -62,12 +62,12 @@ class PropLogicListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by PropLogicParser#atom.
-    def enterAtom(self, ctx:PropLogicParser.AtomContext):
+    # Enter a parse tree produced by PropLogicParser#atomicExpr.
+    def enterAtomicExpr(self, ctx:PropLogicParser.AtomicExprContext):
         pass
 
-    # Exit a parse tree produced by PropLogicParser#atom.
-    def exitAtom(self, ctx:PropLogicParser.AtomContext):
+    # Exit a parse tree produced by PropLogicParser#atomicExpr.
+    def exitAtomicExpr(self, ctx:PropLogicParser.AtomicExprContext):
         pass
 
 

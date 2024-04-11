@@ -18,6 +18,7 @@ class KekVisitor(PropLogicVisitor):
     assert len(ctx.children) == 3  # [left_expr, 'equiv', right_expr]
     return [self.visit(ctx.children[0]), 'equiv', self.visit(ctx.children[2])]
   def visitImplicationExpr(self, ctx):
+    print('at least we are here, folding', [self.visit(child) for child in ctx.children])
     return right_assoc_fold('implies', [self.visit(child) for child in ctx.children])
   def visitDisjunctionExpr(self, ctx):
     return left_assoc_fold('or', [self.visit(child) for child in ctx.children])
@@ -28,20 +29,19 @@ class KekVisitor(PropLogicVisitor):
       return self.visit(ctx.children[0])
     assert len(ctx.children) == 2  # ['not', expr]
     return ['not', self.visit(ctx.children[1])]
-  def visitAtom(self, ctx):
-    if len(ctx.children) == 1:
-      return str(ctx.children[0])
-    assert len(ctx.children) == 3  # ['(', expr, ')']
-    return self.visit(ctx.children[1])
+  def visitNameStr(self, ctx):
+    return str(ctx)
+  def visitFalseStr(self, ctx):
+    return 'false'
 
 def kek_conversion(s):
   tree = PropLogicParser(CommonTokenStream(PropLogicLexer(InputStream(s)))).genericExpr()
   return KekVisitor().visit(tree)
 
 s = 'a implies b or c and d implies e'
-#print(s)
+print(s)
 converted = kek_conversion(s)
-#print('CONVERTED:', converted)
+print('CONVERTED:', converted)
 assert converted == ['a', 'implies', [['b', 'or', ['c', 'and', 'd']], 'implies', 'e']]
 #print()
 
