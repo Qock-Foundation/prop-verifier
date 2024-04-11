@@ -9,6 +9,16 @@ else:
 
 class PropLogicVisitor(ParseTreeVisitor):
 
+    # Visit a parse tree produced by PropLogicParser#genericExpr.
+    def visitGenericExpr(self, ctx:PropLogicParser.GenericExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by PropLogicParser#equivalenceExpr.
+    def visitEquivalenceExpr(self, ctx:PropLogicParser.EquivalenceExprContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by PropLogicParser#implicationExpr.
     def visitImplicationExpr(self, ctx:PropLogicParser.ImplicationExprContext):
         return self.visitChildren(ctx)
@@ -21,6 +31,11 @@ class PropLogicVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by PropLogicParser#conjunctionExpr.
     def visitConjunctionExpr(self, ctx:PropLogicParser.ConjunctionExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by PropLogicParser#negationExpr.
+    def visitNegationExpr(self, ctx:PropLogicParser.NegationExprContext):
         return self.visitChildren(ctx)
 
 

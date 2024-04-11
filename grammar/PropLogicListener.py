@@ -8,6 +8,24 @@ else:
 # This class defines a complete listener for a parse tree produced by PropLogicParser.
 class PropLogicListener(ParseTreeListener):
 
+    # Enter a parse tree produced by PropLogicParser#genericExpr.
+    def enterGenericExpr(self, ctx:PropLogicParser.GenericExprContext):
+        pass
+
+    # Exit a parse tree produced by PropLogicParser#genericExpr.
+    def exitGenericExpr(self, ctx:PropLogicParser.GenericExprContext):
+        pass
+
+
+    # Enter a parse tree produced by PropLogicParser#equivalenceExpr.
+    def enterEquivalenceExpr(self, ctx:PropLogicParser.EquivalenceExprContext):
+        pass
+
+    # Exit a parse tree produced by PropLogicParser#equivalenceExpr.
+    def exitEquivalenceExpr(self, ctx:PropLogicParser.EquivalenceExprContext):
+        pass
+
+
     # Enter a parse tree produced by PropLogicParser#implicationExpr.
     def enterImplicationExpr(self, ctx:PropLogicParser.ImplicationExprContext):
         pass
@@ -32,6 +50,15 @@ class PropLogicListener(ParseTreeListener):
 
     # Exit a parse tree produced by PropLogicParser#conjunctionExpr.
     def exitConjunctionExpr(self, ctx:PropLogicParser.ConjunctionExprContext):
+        pass
+
+
+    # Enter a parse tree produced by PropLogicParser#negationExpr.
+    def enterNegationExpr(self, ctx:PropLogicParser.NegationExprContext):
+        pass
+
+    # Exit a parse tree produced by PropLogicParser#negationExpr.
+    def exitNegationExpr(self, ctx:PropLogicParser.NegationExprContext):
         pass
 
 

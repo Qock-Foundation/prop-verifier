@@ -12,12 +12,22 @@ def right_assoc_fold(op_name, list):
 #assert right_assoc_fold('implies', ['a', 'b', 'c', 'd']) == ['a', 'implies', ['b', 'implies', ['c', 'implies', 'd']]]
 
 class KekVisitor(PropLogicVisitor):
+  def visitEquivalenceExpr(self, ctx):
+    if len(ctx.children) == 1:
+      return self.visit(ctx.children[0])
+    assert len(ctx.children) == 3  # [left_expr, 'equiv', right_expr]
+    return [self.visit(ctx.children[0]), 'equiv', self.visit(ctx.children[2])]
   def visitImplicationExpr(self, ctx):
     return right_assoc_fold('implies', [self.visit(child) for child in ctx.children])
   def visitDisjunctionExpr(self, ctx):
     return left_assoc_fold('or', [self.visit(child) for child in ctx.children])
   def visitConjunctionExpr(self, ctx):
     return left_assoc_fold('and', [self.visit(child) for child in ctx.children])
+  def visitNegationExpr(self, ctx):
+    if len(ctx.children) == 1:
+      return self.visit(ctx.children[0])
+    assert len(ctx.children) == 2  # ['not', expr]
+    return ['not', self.visit(ctx.children[1])]
   def visitAtom(self, ctx):
     if len(ctx.children) == 1:
       return str(ctx.children[0])
@@ -25,7 +35,7 @@ class KekVisitor(PropLogicVisitor):
     return self.visit(ctx.children[1])
 
 def kek_conversion(s):
-  tree = PropLogicParser(CommonTokenStream(PropLogicLexer(InputStream(s)))).implicationExpr()
+  tree = PropLogicParser(CommonTokenStream(PropLogicLexer(InputStream(s)))).genericExpr()
   return KekVisitor().visit(tree)
 
 s = 'a implies b or c and d implies e'
@@ -41,3 +51,9 @@ converted = kek_conversion(s)
 #print('CONVERTED:', converted)
 assert converted == ['a', 'implies', ['b', 'or', ['c', 'and', ['d', 'implies', 'e']]]]
 #print()
+
+s = r'a <-> not not a'
+#print(s)
+converted = kek_conversion(s)
+#print('CONVERTED:', converted)
+assert converted == ['a', 'equiv', ['not', ['not', 'a']]]
