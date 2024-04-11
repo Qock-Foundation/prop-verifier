@@ -102,22 +102,24 @@ for i, s in enumerate(sys.stdin):
   print('parsed as', str(proposition_parsed))
   axiom_i = is_axiom(proposition_parsed)
   if axiom_i:
-    print(f'proposition {i} recognized as axiom {axiom_i}')
+    print(f'proposition {i+1} recognized as axiom {axiom_i}')
     theorems.append(proposition_parsed)
   else:
     mp_info = follows_by_mp(proposition_parsed, theorems)
     if mp_info:
       premise, conclusion = mp_info
-      print(f'proposition {i} follows by Modus Ponens with premise {premise} and conclusion {conclusion}, indeed')
+      print(f'proposition {i+1} follows by Modus Ponens with premise {premise} and conclusion {conclusion}, indeed')
       theorems.append(proposition_parsed)
     else:
-      print(f'ERROR on line {i}: got "{s}", parsed as {proposition_parsed}, this proposition is not an axiom and doesn\'t follow from the previous ones by Modus Ponens')
+      print(f'ERROR on line {i+1}: got "{s}", parsed as {proposition_parsed}, this proposition is not an axiom and doesn\'t follow from the previous ones by Modus Ponens')
       print('PROOF IS INCORRECT.')
       quit(1)
   sys.stdout.flush()
 print('PROOF IS CORRECT! :)')
 
-with open('accepted-proofs.html', 'a') as logs:
-  logs.write(f'{author} proved that {s}! <br>\n')
+from logs_filename import logs_filename
+
+with open(logs_filename, 'a') as logs:
+  logs.write(f'{author} proved that {s} in {i+1} lines! <br>\n')
   logs.flush()
 quit(0)
