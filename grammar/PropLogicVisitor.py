@@ -39,8 +39,8 @@ class PropLogicVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by PropLogicParser#atomicExpr.
-    def visitAtomicExpr(self, ctx:PropLogicParser.AtomicExprContext):
+    # Visit a parse tree produced by PropLogicParser#atom.
+    def visitAtom(self, ctx:PropLogicParser.AtomContext):
         return self.visitChildren(ctx)
 
 
