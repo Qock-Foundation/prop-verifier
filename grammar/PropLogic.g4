@@ -1,10 +1,10 @@
 grammar PropLogic;
 
 genericExpr : equivalenceExpr;
-equivalenceExpr : implicationExpr (EquivStr implicationExpr)?;
-implicationExpr : disjunctionExpr (ImpliesStr implicationExpr)?;
-disjunctionExpr : conjunctionExpr | disjunctionExpr OrStr conjunctionExpr;
-conjunctionExpr : negationExpr (AndStr conjunctionExpr)?;
+equivalenceExpr : implicationExpr | implicationExpr EquivStr implicationExpr;
+implicationExpr : disjunctionExpr | disjunctionExpr ImpliesStr implicationExpr;
+disjunctionExpr : conjunctionExpr | conjunctionExpr OrStr disjunctionExpr;
+conjunctionExpr : negationExpr | conjunctionExpr AndStr negationExpr;
 negationExpr : atomicExpr | NotStr negationExpr;
 atomicExpr : FalseStr | Name | LParenStr genericExpr RParenStr | LBracketStr genericExpr RBracketStr;
 
