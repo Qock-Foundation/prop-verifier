@@ -79,7 +79,7 @@ def is_axiom(proposition_parsed):
   except: pass
   try:  # NOT-1: not a implies (a implies false)
     [n1, a], i1, [a_, i2, f1] = proposition_parsed
-    if n1 in negations_s and i1 in implications_s and i2 in implication_s and f1 in falsehoods_s and eq(a, a_):
+    if n1 in negations_s and i1 in implications_s and i2 in implications_s and f1 in falsehoods_s and eq(a, a_):
       return 13
   except: pass
   try:  # NOT-2: (a implies false) implies not a
