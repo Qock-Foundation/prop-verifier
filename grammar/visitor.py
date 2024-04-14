@@ -28,11 +28,16 @@ class KekVisitor(PropLogicVisitor):
       return self.visit(ctx.children[0])
     assert len(ctx.children) == 2  # ['not', expr]
     return ['not', self.visit(ctx.children[1])]
-  def visitAtom(self, ctx):
+  def visitAtomicExpr(self, ctx):
     if len(ctx.children) == 1:
-      return str(ctx.children[0])
+      return self.visit(ctx.children[0])
     assert len(ctx.children) == 3  # ['(', expr, ')']
     return self.visit(ctx.children[1])
+  def visitTerminal(self, node):
+    token = node.symbol
+    if token.type is PropLogicLexer.FalseStr:
+      return 'false'
+    return token.text
 
 def kek_conversion(s):
   tree = PropLogicParser(CommonTokenStream(PropLogicLexer(InputStream(s)))).genericExpr()
@@ -57,3 +62,9 @@ s = r'a <-> not not a'
 converted = kek_conversion(s)
 #print('CONVERTED:', converted)
 assert converted == ['a', 'equiv', ['not', ['not', 'a']]]
+
+s = 'a -> 0'
+#print(s)
+converted = kek_conversion(s)
+#print('CONVERTED:', converted)
+assert converted == ['a', 'implies', 'false']
