@@ -3,7 +3,7 @@ grammar PropLogic;
 genericExpr : equivalenceExpr;
 equivalenceExpr : implicationExpr | implicationExpr EquivStr implicationExpr;
 implicationExpr : disjunctionExpr | disjunctionExpr ImpliesStr implicationExpr;
-disjunctionExpr : conjunctionExpr | conjunctionExpr OrStr disjunctionExpr;
+disjunctionExpr : conjunctionExpr | disjunctionExpr OrStr conjunctionExpr;
 conjunctionExpr : negationExpr | conjunctionExpr AndStr negationExpr;
 negationExpr : atomicExpr | NotStr negationExpr;
 atomicExpr : FalseStr | Name | LParenStr genericExpr RParenStr | LBracketStr genericExpr RBracketStr;
