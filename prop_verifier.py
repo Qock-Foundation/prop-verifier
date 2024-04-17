@@ -100,8 +100,8 @@ def follows_by_mp(proposition_parsed, theorems):
 theorems = []
 
 author = input('author ')
-assert re.search('^[a-zA-Z0-9_]*$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
-print(f'Hello, {author}!!!')
+assert re.search('^[a-zA-Z0-9_]*( draft)?$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
+print(f'Hello, {author.strip("{} draft")}!!!')
 for i, s in enumerate(sys.stdin):
   s = s[:-1]
   #proposition_parsed = formula_t.parseString(s)[0]
@@ -130,7 +130,11 @@ print('PROOF IS CORRECT! :)')
 
 from logs_filename import logs_filename
 
-with open(logs_filename, 'a') as logs:
-  logs.write(f'{author} proved that {s} in {i+1} lines! <br>\n')
-  logs.flush()
+if author[-6:] != ' draft':
+  with open(logs_filename, 'a') as logs:
+    logs.write(f'{author} proved that {s} in {i+1} lines! <br>\n')
+    logs.flush()
+  print('(This was recorded)')
+else:
+  print('(This proof was market as draft, so not recorded)')
 quit(0)
