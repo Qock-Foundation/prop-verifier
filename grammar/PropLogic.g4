@@ -9,7 +9,7 @@ conjunctionExpr : negationExpr | conjunctionExpr AndStr negationExpr;
 negationExpr : atomicExpr | NotStr negationExpr;
 atomicExpr : FalseStr | Name | LParenStr genericExpr RParenStr | LBracketStr genericExpr RBracketStr;
 
-EquivStr : 'equiv' | 'Equiv' | 'EQUIV' | 'equivalent' | '<->' | '<=>' | '<-->' | '<==> ' | '⇔' | '↔';
+EquivStr : 'equiv' | 'Equiv' | 'EQUIV' | 'equivalent' | '<->' | '<=>' | '<-->' | '<==>' | '⇔' | '↔';
 ImpliesStr : 'implies' | 'IMPLIES' | '->' | '=>' | '⇒' | '→';
 OrStr : 'or' | 'OR' | '||' | '\\/' | '∨';
 XorStr : 'xor' | 'XOR' | '+' | '⊕';
