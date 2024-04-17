@@ -71,8 +71,8 @@ converted = kek_conversion(s)
 #print('CONVERTED:', converted)
 assert converted == ['a', 'implies', 'false']
 
-s = 'a ⇒ b ⇔ c ⊕ ¬d ∨ e ∧ ⊥'
+s = 'a ⇒ b ⇔ c ⊕ ¬d ∨ e ∧ ⊥ or o_O'
 #print(s)
 converted = kek_conversion(s)
 #print('CONVERTED:', converted)
-assert converted == [['a', 'implies', 'b'], 'equiv', [['c', 'xor', ['not', 'd']], 'or', ['e', 'and', 'false']]]
+assert converted == [['a', 'implies', 'b'], 'equiv', [[['c', 'xor', ['not', 'd']], 'or', ['e', 'and', 'false']], 'or', 'false']]

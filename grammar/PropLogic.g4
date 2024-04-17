@@ -15,7 +15,7 @@ OrStr : 'or' | 'OR' | '||' | '\\/' | '∨';
 XorStr : 'xor' | 'XOR' | '+' | '⊕';
 AndStr : 'and' | 'AND' | '&&' | '*' | '/\\' | '∧';
 NotStr : 'not' | 'NOT' | '!' | '~' | '¬';
-FalseStr : 'false' | 'False' | 'FALSE' | '0' | 'null' | 'nil' | '⊥';
+FalseStr : 'false' | 'False' | 'FALSE' | '0' | 'null' | 'nil' | '⊥' | 'o_O';
 LParenStr : '(';
 RParenStr : ')';
 LBracketStr : '[';
