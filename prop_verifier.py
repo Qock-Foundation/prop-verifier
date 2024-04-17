@@ -6,6 +6,7 @@ from grammar.visitor import kek_conversion
 equivalences_s = ['equiv']
 implications_s = ['implies']
 conjunctions_s = ['and']
+xors_s = ['xor']
 disjunctions_s = ['or']
 negations_s = ['not']
 falsehoods_s = ['false']
@@ -86,6 +87,16 @@ def is_axiom(proposition_parsed):
     [a, i1, f1], i2, [n1, a_] = proposition_parsed
     if i1 in implications_s and f1 in falsehoods_s and i2 in implications_s and n1 in negations_s and eq(a, a_):
       return 14
+  except: pass
+  try:  # XOR-1: a xor b implies a and not b or not a and b
+    [a, x1, b], i1, [[a_, c1, [n1, b_]], d1, [[n2, a__], c2, b__]] = proposition_parsed
+    if x1 in xors_s and i1 in implications_s and c1 in conjunctions_s and n1 in negations_s and d1 in disjunctions_s and n2 in negations_s and c2 in conjunctions_s and eq3(a, a_, a__) and eq3(b, b_, b__):
+      return 15
+  except: pass
+  try:  # XOR-2: a not not b or not a and b implies a xor b
+    [[a, c1, [n1, b]], d1, [[n2, a_], c2, b_]], i1, [a__, x1, b__] = proposition_parsed
+    if c1 in conjunctions_s and n1 in negations_s and d1 in disjunctions_s and n2 in negations_s and c2 in conjunctions_s and i1 in implications_s and x1 in xors_s and eq3(a, a_, a__) and eq3(b, b_, b__):
+      return 16
   except: pass
   return False
 

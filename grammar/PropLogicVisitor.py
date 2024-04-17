@@ -29,6 +29,11 @@ class PropLogicVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by PropLogicParser#xorExpr.
+    def visitXorExpr(self, ctx:PropLogicParser.XorExprContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by PropLogicParser#conjunctionExpr.
     def visitConjunctionExpr(self, ctx:PropLogicParser.ConjunctionExprContext):
         return self.visitChildren(ctx)

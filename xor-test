@@ -1,0 +1,3 @@
+elexunix draft
+a xor b implies a and not b or not a and b
+a and not b or not a and b implies a xor b

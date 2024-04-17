@@ -44,6 +44,15 @@ class PropLogicListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by PropLogicParser#xorExpr.
+    def enterXorExpr(self, ctx:PropLogicParser.XorExprContext):
+        pass
+
+    # Exit a parse tree produced by PropLogicParser#xorExpr.
+    def exitXorExpr(self, ctx:PropLogicParser.XorExprContext):
+        pass
+
+
     # Enter a parse tree produced by PropLogicParser#conjunctionExpr.
     def enterConjunctionExpr(self, ctx:PropLogicParser.ConjunctionExprContext):
         pass

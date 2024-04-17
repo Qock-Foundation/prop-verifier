@@ -21,6 +21,8 @@ class KekVisitor(PropLogicVisitor):
     return right_assoc_fold('implies', [self.visit(child) for child in ctx.children])
   def visitDisjunctionExpr(self, ctx):
     return left_assoc_fold('or', [self.visit(child) for child in ctx.children])
+  def visitXorExpr(self, ctx):
+    return left_assoc_fold('xor', [self.visit(child) for child in ctx.children])
   def visitConjunctionExpr(self, ctx):
     return left_assoc_fold('and', [self.visit(child) for child in ctx.children])
   def visitNegationExpr(self, ctx):
@@ -68,3 +70,9 @@ s = 'a -> 0'
 converted = kek_conversion(s)
 #print('CONVERTED:', converted)
 assert converted == ['a', 'implies', 'false']
+
+s = 'a ⇒ b ⇔ c ⊕ ¬d ∨ e ∧ ⊥'
+#print(s)
+converted = kek_conversion(s)
+#print('CONVERTED:', converted)
+assert converted == [['a', 'implies', 'b'], 'equiv', [['c', 'xor', ['not', 'd']], 'or', ['e', 'and', 'false']]]
