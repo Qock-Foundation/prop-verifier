@@ -114,7 +114,7 @@ author = input('author ')
 assert re.search('^[a-zA-Z0-9_]*( draft)?$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
 print(f'Hello, {author.strip("{} draft")}!!!')
 for i, s in enumerate(sys.stdin):
-  s = s[:-1]
+  s = s[:-1].split('#')[0].split('//')[0]
   #proposition_parsed = formula_t.parseString(s)[0]
   print(f'\nProposition {i+1}: ', s)
   if s.strip() == '':
