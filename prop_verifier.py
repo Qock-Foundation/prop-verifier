@@ -112,14 +112,19 @@ theorems = []
 
 author = input('author ')
 assert re.search('^[a-zA-Z0-9_]*( draft)?$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
-print(f'Hello, {author.strip("{} draft")}!!!')
+print(f'Hello, {author.strip("{} draft")}!!!\n')
+skips = 0
 for i, s in enumerate(sys.stdin):
-  s = s[:-1].split('#')[0].split('//')[0]
+  s = s[:-1].split('#')[0].split('//')[0].strip()
   #proposition_parsed = formula_t.parseString(s)[0]
-  print(f'\nProposition {i+1}: ', s)
-  if s.strip() == '':
-    print(f'\nERROR on line {i+1}: empty proposition')
-    quit(1)
+  print(f'Proposition {i+1}: ', s)
+  if s == '':
+    skips += 1
+    print(f'NOTE on line {i+1}: empty proposition, not counted (skipped lines so far: {skips})')
+    continue
+  if s == 'stop':
+    print(f'NOTE on line {i+1}: stopword read, exiting')
+    quit(0)
   proposition_parsed = kek_conversion(s)
   print('  parsed as:    ', str(proposition_parsed))
   axiom_i = is_axiom(proposition_parsed)
@@ -137,15 +142,15 @@ for i, s in enumerate(sys.stdin):
       print('PROOF IS INCORRECT.')
       quit(1)
   sys.stdout.flush()
-print('PROOF IS CORRECT! :)')
+print('PROOF IS CORRECT! :)\n')
 
 from logs_filename import logs_filename
 
 if author[-6:] != ' draft':
   with open(logs_filename, 'a') as logs:
-    logs.write(f'{author} proved that {s} in {i+1} lines! <br>\n')
+    logs.write(f'{author} proved that {s} in {i+1-skips} lines! <br>\n')
     logs.flush()
   print('(This was recorded)')
 else:
-  print('(This proof was market as draft, so not recorded)')
+  print(f'(This proof in {i+1-skips} lines was market as draft, so not recorded)')
 quit(0)
