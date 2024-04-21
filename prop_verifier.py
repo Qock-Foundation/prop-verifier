@@ -3,106 +3,58 @@ import sys, re
 #from cPyparsing import nums, alphas, Word, oneOf, opAssoc, infixNotation
 from grammar.visitor import kek_conversion
 
-equivalences_s = ['equiv']
-implications_s = ['implies']
-conjunctions_s = ['and']
-xors_s = ['xor']
-disjunctions_s = ['or']
-negations_s = ['not']
-falsehoods_s = ['false']
-
 def eq(a, a_):
   return str(a) == str(a_)
 
 def eq3(a, a_, a__):
   return eq(a, a_) and eq(a_, a__)
 
-def is_axiom(proposition_parsed):
-  try:  # THEN-1: a implies b implies a
-    a, i1, [b, i2, a_] = proposition_parsed
-    if i1 in implications_s and i2 in implications_s and eq(a, a_):
-      return 1
-  except: pass
-  try:  # THEN-2: (a implies b implies c) implies (a implies b) implies (a implies c)
-    [a, i1, [b, i2, c]], i3, [[a_, i4, b_], i5, [a__, i6, c_]] = proposition_parsed
-    if i1 in implications_s and i2 in implications_s and i3 in implications_s and i4 in implications_s and i5 in implications_s and i6 in implications_s and eq3(a, a_, a__) and eq(b, b_) and eq(c, c_):
-      return 2
-  except: pass
-  try:  # AND-1: a and b implies a
-    [a, c1, b], i1, a_ = proposition_parsed
-    if c1 in conjunctions_s and i1 in implications_s and eq(a, a_):
-      return 3
-  except: pass
-  try:  # AND-2: a and b implies b
-    [a, c1, b], i1, b_ = proposition_parsed
-    if c1 in conjunctions_s and i1 in implications_s and eq(b, b_):
-      return 4
-  except: pass
-  try:  # AND-3: a implies b implies a and b
-    a, i1, [b, i2, [a_, c1, b_]] = proposition_parsed
-    if i1 in implications_s and i2 in implications_s and c1 in conjunctions_s and eq(a, a_) and eq(b, b_):
-      return 5
-  except: pass
-  try:  # OR-1: a implies a or b
-    a, i1, [a_, d1, b] = proposition_parsed
-    if i1 in implications_s and d1 in disjunctions_s and eq(a, a_):
-      return 6
-  except: pass
-  try:  # OR-2: b implies a or b
-    b, i1, [a, d1, b_] = proposition_parsed
-    if i1 in implications_s and d1 in disjunctions_s and eq(b, b_):
-      return 7
-  except: pass
-  try:  # OR-3: (a implies c) implies (b implies c) implies (a or b implies c)
-    [a, i1, c], i2, [[b, i3, c_], i4, [[a_, d1, b_], i5, c__]] = proposition_parsed
-    if i1 in implications_s and i2 in implications_s and i3 in implications_s and i4 in implications_s and d1 in disjunctions_s and i5 in implications_s and eq(a, a_) and eq(b, b_) and eq3(c, c_, c__):
-      return 8
-  except: pass
-  try:  # FALSE: false implies a
-    f1, i1, a = proposition_parsed
-    if i1 in implications_s and f1 in falsehoods_s:
-      return 9
-  except: pass
-  try:  # EQUIV-1: (a equiv b) implies (a implies b)
-    [a, e1, b], i1, [a_, i2, b_] = proposition_parsed
-    if e1 in equivalences_s and i1 in implications_s and i2 in implications_s and eq(a, a_) and eq(b, b_):
-      return 10
-  except: pass
-  try:  # EQUIV-2: (a equiv b) implies (b implies a)
-    [a, e1, b], i1, [b_, i2, a_] = proposition_parsed
-    if e1 in equivalences_s and i1 in implications_s and i2 in implications_s and eq(a, a_) and eq(b, b_):
-      return 11
-  except: pass
-  try:  # EQUIV-3: (a implies b) implies (b implies a) implies (a equiv b)
-    [a, i1, b], i2, [[b_, i3, a_], i4, [a__, e1, b__]] = proposition_parsed
-    if i1 in implications_s and i2 in implications_s and i3 in implications_s and i4 in implications_s and e1 in equivalences_s and eq3(a, a_, a__) and eq3(b, b_, b__):
-      return 12
-  except: pass
-  try:  # NOT-1: not a implies (a implies false)
-    [n1, a], i1, [a_, i2, f1] = proposition_parsed
-    if n1 in negations_s and i1 in implications_s and i2 in implications_s and f1 in falsehoods_s and eq(a, a_):
-      return 13
-  except: pass
-  try:  # NOT-2: (a implies false) implies not a
-    [a, i1, f1], i2, [n1, a_] = proposition_parsed
-    if i1 in implications_s and f1 in falsehoods_s and i2 in implications_s and n1 in negations_s and eq(a, a_):
-      return 14
-  except: pass
-  try:  # XOR-1: a xor b implies a and not b or not a and b
-    [a, x1, b], i1, [[a_, c1, [n1, b_]], d1, [[n2, a__], c2, b__]] = proposition_parsed
-    if x1 in xors_s and i1 in implications_s and c1 in conjunctions_s and n1 in negations_s and d1 in disjunctions_s and n2 in negations_s and c2 in conjunctions_s and eq3(a, a_, a__) and eq3(b, b_, b__):
-      return 15
-  except: pass
-  try:  # XOR-2: a not not b or not a and b implies a xor b
-    [[a, c1, [n1, b]], d1, [[n2, a_], c2, b_]], i1, [a__, x1, b__] = proposition_parsed
-    if c1 in conjunctions_s and n1 in negations_s and d1 in disjunctions_s and n2 in negations_s and c2 in conjunctions_s and i1 in implications_s and x1 in xors_s and eq3(a, a_, a__) and eq3(b, b_, b__):
-      return 16
-  except: pass
+def is_axiom(p):
+  equivalence = lambda l : isinstance(l, list) and len(l) == 3 and l[1] == 'equiv'
+  implication = lambda l : isinstance(l, list) and len(l) == 3 and l[1] == 'implies'
+  disjunction = lambda l : isinstance(l, list) and len(l) == 3 and l[1] == 'or'
+  xor = lambda l : isinstance(l, list) and len(l) == 3 and l[1] == 'xor'
+  conjunction = lambda l : isinstance(l, list) and len(l) == 3 and l[1] == 'and'
+  negation = lambda l : isinstance(l, list) and len(l) == 2 and l[0] == 'not'
+  falsehood = lambda l : l == 'false'
+  #print(implication(p), implication(p[2]), eq(p[0], p[2]
+  if implication(p) and implication(p[2]) and eq(p[0], p[2][2]):
+    return 1  # THEN-1: a implies b implies a
+  if implication(p) and implication(p[0]) and implication(p[0][2]) and implication(p[2]) and implication(p[2][0]) and implication(p[2][2]) and eq3(p[0][0], p[2][0][0], p[2][2][0]) and eq(p[0][2][0], p[2][0][2]) and eq(p[0][2][2], p[2][2][2]):
+    return 2  # THEN-2: (a implies b implies c) implies (a implies b) implies (a implies c)
+  if implication(p) and conjunction(p[0]) and eq(p[0][0], p[2]):
+    return 3  # AND-1: a and b implies a
+  if implication(p) and conjunction(p[0]) and eq(p[0][2], p[2]):
+    return 4  # AND-2: a and b implies b
+  if implication(p) and implication(p[2]) and conjunction(p[2][2]) and eq(p[0], p[2][2][0]) and eq(p[2][0], p[2][2][2]):
+    return 5  # AND-3: a implies b implies a and b
+  if implication(p) and disjunction(p[2]) and eq(p[0], p[2][0]):
+    return 6  # OR-1: a implies a or b
+  if implication(p) and disjunction(p[2]) and eq(p[0], p[2][2]):
+    return 7  # OR-2: b implies a or b
+  if implication(p) and implication(p[0]) and implication(p[2]) and implication(p[2][0]) and implication(p[2][2]) and disjunction(p[2][2][0]) and eq(p[0][0], p[2][2][0][0]) and eq(p[2][0][0], p[2][2][0][2]) and eq3(p[0][2], p[2][0][2], p[2][2][2]):
+    return 8  # OR-3: (a implies c) implies (b implies c) implies (a or b implies c)
+  if implication(p) and falsehood(p[0]):
+    return 9  # FALSE: false implies a
+  if implication(p) and equivalence(p[0]) and implication(p[2]) and eq(p[0][0], p[2][0]) and eq(p[0][2], p[2][2]):
+    return 10 # EQUIV-1: (a equiv b) implies (a implies b)
+  if implication(p) and equivalence(p[0]) and implication(p[2]) and eq(p[0][0], p[2][2]) and eq(p[0][2], p[2][0]):
+    return 11 # EQUIV-2: (a equiv b) implies (b implies a)
+  if implication(p) and implication(p[0]) and implication(p[2]) and implication(p[2][0]) and equivalence(p[2][2]) and eq3(p[0][0], p[2][0][2], p[2][2][0]) and eq3(p[0][2], p[2][0][0], p[2][2][2]):
+    return 12 # EQUIV-3: (a implies b) implies (b implies a) implies (a equiv b)
+  if implication(p) and negation(p[0]) and implication(p[2]) and falsehood(p[2][2]) and eq(p[0][1], p[2][0]):
+    return 13 # NOT-1: not a implies (a implies false)
+  if implication(p) and implication(p[0]) and falsehood(p[0][2]) and negation(p[2]) and eq(p[0][0], p[2][1]):
+    return 14 # NOT-2: (a implies false) implies not a
+  if implication(p) and xor(p[0]) and disjunction(p[2]) and conjunction(p[2][0]) and negation(p[2][0][2]) and conjunction(p[2][2]) and negation(p[2][2][0]) and eq3(p[0][0], p[2][0][0], p[2][2][0][1]) and eq3(p[0][2], p[2][0][2][1], p[2][2][2]):
+    return 15 # XOR-1: a xor b implies a and not b or not a and b
+  if implication(p) and disjunction(p[0]) and conjunction(p[0][0]) and negation(p[0][0][2]) and conjunction(p[0][2]) and negation(p[0][2][0]) and xor(p[2]) and eq3(p[0][0][0], p[0][2][0][1], p[2][0]) and eq3(p[0][0][2][1], p[0][2][2], p[2][2]):
+    return 16 # XOR-2: a and not b or not a and b implies a xor b
   return False
 
 def follows_by_mp(proposition_parsed, theorems):
   for a_implies_b in theorems:
-    if len(a_implies_b) == 3 and a_implies_b[1] in implications_s:
+    if len(a_implies_b) == 3 and a_implies_b[1] == 'implies':
       a, _, b = a_implies_b
       if str(a) in map(str, theorems) and str(b) == str(proposition_parsed):
         return a, b
@@ -113,7 +65,7 @@ theorems = []
 author = input('author ')
 assert re.search('^[a-zA-Z0-9_]*( draft)?$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
 print(f'Hello, {author[:-6] if author.endswith(" draft") else author}!!!\n')
-skips = 0
+i, skips = -1, 0
 for i, s in enumerate(sys.stdin):
   s = s[:-1].split('#')[0].split('//')[0].strip()
   #proposition_parsed = formula_t.parseString(s)[0]
@@ -150,7 +102,9 @@ if author[-6:] != ' draft':
   with open(logs_filename, 'a') as logs:
     logs.write(f'{author} proved that {s} in {i+1-skips} lines! <br>\n')
     logs.flush()
-  print('(This was recorded)')
+  print(f'(This was proof in {i+1-skips} propositions was recorded)')
+elif i + 1 - skips > 0:
+  print(f'(This proof in {i+1-skips} propositions was market as draft, so not recorded)')
 else:
-  print(f'(This proof in {i+1-skips} lines was market as draft, so not recorded)')
+  print(f'(This proof contains {i+1} lines, all {skips} of which are comments/empty, so nothing recorded)')
 quit(0)
