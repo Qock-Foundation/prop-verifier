@@ -69,7 +69,7 @@ i, skips = -1, 0
 for i, s in enumerate(sys.stdin):
   s = s[:-1].split('#')[0].split('//')[0].strip()
   #proposition_parsed = formula_t.parseString(s)[0]
-  print(f'Proposition {i+1}: ', s)
+  print(f'Line {i+1}: ', s)
   if s == '':
     skips += 1
     print(f'NOTE on line {i+1}: empty proposition, not counted (skipped lines so far: {skips})')
