@@ -66,8 +66,14 @@ author = input('author ')
 assert re.search('^[a-zA-Z0-9_]*( draft)?$', author) is not None, f'author name should be alphanumeric without spaces etc, your author name is "{author}"'
 print(f'Hello, {author[:-6] if author.endswith(" draft") else author}!!!\n')
 i, skips = -1, 0
+conditional_proof = False
 for i, s in enumerate(sys.stdin):
   s = s[:-1].split('#')[0].split('//')[0].strip()
+  just_believe = False
+  if s[0] == '@':
+    just_believe = True
+    conditional_proof = True
+    s = s[1:]
   #proposition_parsed = formula_t.parseString(s)[0]
   print(f'Line {i+1}: ', s)
   if s == '':
@@ -80,7 +86,10 @@ for i, s in enumerate(sys.stdin):
   proposition_parsed = kek_conversion(s)
   print('  parsed as:    ', str(proposition_parsed))
   axiom_i = is_axiom(proposition_parsed)
-  if axiom_i:
+  if just_believe:
+    print(f'  marked as assumption, so let\'s believe it')
+    theorems.append(proposition_parsed)
+  elif axiom_i:
     print(f'  recognized as axiom {axiom_i}')
     theorems.append(proposition_parsed)
   else:
@@ -92,9 +101,12 @@ for i, s in enumerate(sys.stdin):
     else:
       print(f'\nERROR on line {i+1}: got "{s}", parsed as {proposition_parsed}, this proposition is not an axiom and doesn\'t follow from the previous ones by Modus Ponens')
       print('PROOF IS INCORRECT.')
-      quit(1)
+      quit(57)
   sys.stdout.flush()
-print('PROOF IS CORRECT! :)\n')
+print(('CONDITIONAL' if conditional_proof else '') + ' PROOF IS CORRECT! :)\n')
+if conditional_proof:
+  print('(conditional proofs are not recorded)')
+  quit(0)
 
 from logs_filename import logs_filename
 
