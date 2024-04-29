@@ -70,7 +70,7 @@ conditional_proof = False
 for i, s in enumerate(sys.stdin):
   s = s[:-1].split('#')[0].split('//')[0].strip()
   just_believe = False
-  if s[0] == '@':
+  if len(s) > 0 and s[0] == '@':
     just_believe = True
     conditional_proof = True
     s = s[1:]
@@ -103,6 +103,7 @@ for i, s in enumerate(sys.stdin):
       print('PROOF IS INCORRECT.')
       quit(57)
   sys.stdout.flush()
+  last_prop = s
 print(('CONDITIONAL' if conditional_proof else '') + ' PROOF IS CORRECT! :)\n')
 if conditional_proof:
   print('(conditional proofs are not recorded)')
@@ -112,7 +113,7 @@ from logs_filename import logs_filename
 
 if author[-6:] != ' draft':
   with open(logs_filename, 'a') as logs:
-    logs.write(f'{author} proved that {s} in {i+1-skips} lines! <br>\n')
+    logs.write(f'{author} proved that {last_prop} in {i+1-skips} lines! <br>\n')
     logs.flush()
   print(f'(This was proof in {i+1-skips} propositions was recorded)')
 elif i + 1 - skips > 0:
