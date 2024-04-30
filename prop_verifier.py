@@ -115,7 +115,7 @@ if author[-6:] != ' draft':
   with open(logs_filename, 'a') as logs:
     logs.write(f'{author} proved that {last_prop} in {i+1-skips} lines! <br>\n')
     logs.flush()
-  print(f'(This was proof in {i+1-skips} propositions was recorded)')
+  print(f'(This proof in {i+1-skips} propositions was recorded)')
 elif i + 1 - skips > 0:
   print(f'(This proof in {i+1-skips} propositions was market as draft, so not recorded)')
 else:
