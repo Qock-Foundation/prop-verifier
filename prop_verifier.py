@@ -53,7 +53,7 @@ def is_axiom(p):
   return False
 
 def follows_by_mp(proposition_parsed, theorems):
-  for a_implies_b in theorems:
+  for a_implies_b in theorems[::-1]:
     if len(a_implies_b) == 3 and a_implies_b[1] == 'implies':
       a, _, b = a_implies_b
       if str(a) in map(str, theorems) and str(b) == str(proposition_parsed):
